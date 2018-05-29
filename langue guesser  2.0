@@ -141,8 +141,8 @@ def three_letter():
         global training_set_inputs
         training_set_inputs = array([[c,a,t], [u,n,o], [h,a,y], [a,n,o], [h,e,y], [r,u,n], [m,a,y], [o,f,f], [t,o,o], [d,o,s], [l,o,s], [l,a,s], [t,w,o], [p,o,p], [u,s,a], [u,s,o], [s,o,y],\
                                      [s,o,y], [t,h,e], [o,n,e], [o,d,d], [p,o,r], [q,u,e], [v,e,r], [s,i,x], [a,n,d], [d,i,g], [f,u,i], [o,u,t], [m,a,x], [m,i,n], [f,o,r], [s,o,l], [n,o,w],\
-                                     [c,o,w], [y,e,s]])
-        training_set_outputs = array([[1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,0,1,1,1]]).T
+                                     [c,o,w], [y,e,s],[m,a,p],[m,o,m])
+        training_set_outputs = array([[1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1]]).T
         count = 0
         new_training_set_inputs = []
         while count in range(len(training_set_inputs)):
@@ -220,8 +220,9 @@ def five_letter():
         global training_set_inputs
         training_set_inputs = array([[s,i,e,t,e], [c,i,n,c,o], [h,e,l,l,o], [l,o,c,a,l], [c,a,r,r,o], [q,u,e,s,o], [w,h,i,c,h], [v,a,l,u,e], [l,l,a,m,o], [e,s,t,o,y], [t,e,s,t,s], [e,s,t,a,s],\
                                      [e,s,t,a,r], [p,h,o,n,e], [c,o,c,h,e], [t,o,w,e,l], [p,i,z,z,a], [c,o,u,n,t], [m,e,n,o,s], [l,u,n,e,s], [f,r,u,t,a], [f,r,u,i,t], [j,u,i,c,e], [j,u,e,g,o],\
-                                     [l,i,b,r,o], [b,e,b,e,r], [c,o,m,e,r], [c,h,i,c,a], [c,h,i,c,o], [w,o,m,a,n], [f,u,n,n,y], [n,i,g,h,t], [g,r,a,d,e], [s,h,e,l,l], [m,o,t,o,r]])
-        training_set_outputs = array([[0,0,1,1,0,0,1,1,0,0,1,0,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1]]).T
+                                     [l,i,b,r,o], [b,e,b,e,r], [c,o,m,e,r], [c,h,i,c,a], [c,h,i,c,o], [w,o,m,a,n], [f,u,n,n,y], [n,i,g,h,t], [g,r,a,d,e], [s,h,e,l,l], [m,o,t,o,r], [d,o,n,a,r],\
+                                     [d,a,t,o,s]])
+        training_set_outputs = array([[0,0,1,1,0,0,1,1,0,0,1,0,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0]]).T
         count = 0
         new_training_set_inputs = []
         while count in range(len(training_set_inputs)):
@@ -264,8 +265,8 @@ def six_letter():
                                      [h,o,m,b,r,e], [a,b,r,a,z,o], [a,b,r,i,g,o], [f,a,c,a,d,e], [r,e,a,l,t,y], [w,i,z,a,r,d], [a,c,a,b,a,r], [a,c,e,r,c,a], [a,c,t,u,a,l], [a,d,u,a,n,o],\
                                      [s,h,o,v,e,l], [n,e,u,r,a,l], [w,o,m,b,a,t], [s,i,m,m,e,r], [a,b,o,a,r,d], [p,y,t,h,o,n], [p,e,n,c,i,l], [w,i,n,d,o,w], [g,l,o,b,a,l], [a,p,p,e,n,d],\
                                      [t,u,r,n,e,d], [t,i,e,m,p,o], [v,e,n,d,e,r], [t,r,a,t,a,r], [e,s,p,o,s,o], [e,s,p,o,s,a], [s,n,e,e,z,e], [e,x,a,m,e,n], [f,a,m,o,s,o], [f,u,t,u,r,o],\
-                                     [m,a,n,d,a,r]])
-        training_set_outputs = array([[0,1,1,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0]]).T
+                                     [m,a,n,d,a,r], [m,o,t,i,v,o], [m,i,n,u,t,o]])
+        training_set_outputs = array([[0,1,1,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,]]).T
         count = 0
         new_training_set_inputs = []
         while count in range(len(training_set_inputs)):
