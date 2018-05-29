@@ -1,0 +1,322 @@
+from numpy import exp, array, random, dot
+import numpy as np
+lettervars = 2 * random.random((26 , 7)) - 1
+print lettervars
+a = 0
+b = 1
+c = 2
+d = 3
+e = 4
+f = 5
+g = 6
+h = 7
+i = 8
+j = 9
+k = 10
+l = 11
+m = 12
+n = 13
+o = 14
+p = 15
+q = 16
+r = 17
+s = 18
+t = 19
+u = 20
+v = 21
+w = 22
+x = 23
+y = 24
+z = 25
+letterchangevar = 0
+#letterchange is a function that will change the values of the letters based on which spot they were in and how far off the guess was from the actual answer
+def letterchange():
+    count1 = 0
+    global letterchangevar
+    x = 0
+    count2 = 0
+    lettercount = 0
+    while x in range(len(training_set_inputs)):
+        if letterchangevar > 0 and training_set_outputs[0, x] == 0:
+            letterchangevar = -letterchangevar
+        if letterchangevar < 0 and training_set_outputs[0,x] == 1:
+            letterchangevar = -letterchangevar
+        if training_set_inputs[count1,count2] == lettercount:
+            lettervars[lettercount, count2] += letterchangevar
+            count2 += 1
+            lettercount = 0
+            x = x + 1
+            if count2 == len(word):
+                count1 += 1
+                count2 = 0
+                if count1 > len(training_set_inputs):
+                    x = len(training_set_inputs)  
+        else:
+            lettercount += 1
+            if lettercount >= 26:
+                lettercount = 0
+#this creates a table of weights based on how long the word and how many training words there are
+class NeuronLayer():
+    def __init__(self, number_of_neurons, number_of_inputs_per_neuron):
+        self.synaptic_weights = 2 * random.random((len(word), number_of_neurons)) - 1
+#sets up the synaptic weights for use
+class NeuralNetwork():
+    def __init__(self, layer1, layer2):
+        self.layer1 = layer1
+        self.layer2 = layer2
+#creates a function to derive
+    def __sigmoid(self, x):
+        return 1 / (1 + exp(-x))
+#finds the deritive of the function stated above
+    def __sigmoid_derivative(self, x):
+        return x * (1 - x)
+#this is the training sequence, it includes complacted things
+    def train(self, use_training_set_inputs, training_set_outputs, number_of_training_iterations):
+        global lettervars
+        for iteration in xrange(number_of_training_iterations):
+            output_from_layer_1, output_from_layer_2 = self.think(use_training_set_inputs)
+
+            layer2_error = training_set_outputs - output_from_layer_2
+            layer2_delta = layer2_error * self.__sigmoid_derivative(output_from_layer_2)
+
+            layer1_error = layer2_delta.dot(self.layer2.synaptic_weights.T)
+            layer1_delta = layer1_error * self.__sigmoid_derivative(output_from_layer_1)
+
+            layer1_adjustment = use_training_set_inputs.T.dot(layer1_delta)
+            layer2_adjustment = output_from_layer_1.T.dot(layer2_delta)
+
+            self.layer1.synaptic_weights += layer1_adjustment
+            self.layer2.synaptic_weights += layer2_adjustment
+            
+            letterchangevar = layer1_adjustment[0,0]
+#more math releated to the train function, used to figure out how much to change the letter values and the synaptic weights by
+    def think(self, inputs):
+        output_from_layer1 = self.__sigmoid(dot(inputs, self.layer1.synaptic_weights))
+        output_from_layer2 = self.__sigmoid(dot(output_from_layer1, self.layer2.synaptic_weights))
+        return output_from_layer1, output_from_layer2
+#thinks about words assuming they are 2 letters long
+def two_letter():
+    if __name__ == "__main__":
+        random.seed(1)
+        layer1 = NeuronLayer(2, 3)
+        layer2 = NeuronLayer(1, 4)
+        neural_network = NeuralNetwork(layer1, layer2)
+        global training_set_inputs
+        training_set_inputs = array([[n,o], [a,t], [t,o], [s,o], [s,e], [t,e], [l,e], [l,o], [l,a], [e,l], [e,s], [i,s], [n,o], [o,k], [o,f]])
+        training_set_outputs = array([[1,1,1,1,0,0,0,0,0,0,0,1,0,1,1]]).T
+        count = 0
+        new_training_set_inputs = []
+        while count in range(len(training_set_inputs)):
+            counting = 0
+            while counting in range(2):
+                new_training_set_inputs.append(lettervars[training_set_inputs[count, counting], counting])
+                counting += 1
+            count += 1
+        array_size = len(training_set_inputs)
+        resize_training_set_inputs = np.asarray(new_training_set_inputs)
+        use_training_set_inputs = resize_training_set_inputs.reshape(array_size,2)
+        neural_network.train(use_training_set_inputs, training_set_outputs, 60000)
+        letter1 = word[0]
+        letter2 = word[1]
+        hidden_state, output = neural_network.think(array([lettervars[eval(letter1),0],lettervars[eval(letter2),1]]))
+        print output
+        if output > .5:
+            print "english"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+        if output< .5:
+            print "spanish"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+
+#thinks about words assuming they are 3 letters long
+def three_letter():
+    if __name__ == "__main__":
+        random.seed(1)
+        layer1 = NeuronLayer(3, 3)
+        layer2 = NeuronLayer(1, 4)
+        neural_network = NeuralNetwork(layer1, layer2)
+        global training_set_inputs
+        training_set_inputs = array([[c,a,t], [u,n,o], [h,a,y], [a,n,o], [h,e,y], [r,u,n], [m,a,y], [o,f,f], [t,o,o], [d,o,s], [l,o,s], [l,a,s], [t,w,o], [p,o,p], [u,s,a], [u,s,o], [s,o,y],\
+                                     [s,o,y], [t,h,e], [o,n,e], [o,d,d], [p,o,r], [q,u,e], [v,e,r], [s,i,x], [a,n,d], [d,i,g], [f,u,i], [o,u,t], [m,a,x], [m,i,n], [f,o,r], [s,o,l], [n,o,w],\
+                                     [c,o,w], [y,e,s]])
+        training_set_outputs = array([[1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,0,1,0,1,1,1,0,0,0,1,1,1,0,1,1,1,1,0,1,1,1]]).T
+        count = 0
+        new_training_set_inputs = []
+        while count in range(len(training_set_inputs)):
+            counting = 0
+            while counting in range(3):
+                new_training_set_inputs.append(lettervars[training_set_inputs[count, counting], counting])
+                counting += 1
+            count += 1
+        array_size = len(training_set_inputs)
+        resize_training_set_inputs = np.asarray(new_training_set_inputs)
+        use_training_set_inputs = resize_training_set_inputs.reshape(array_size,3)
+        neural_network.train(use_training_set_inputs, training_set_outputs, 10000)
+        letter1 = word[0]
+        letter2 = word[1]
+        letter3 = word[2]
+        hidden_state, output = neural_network.think(array([lettervars[eval(letter1),0],lettervars[eval(letter2),1], lettervars[eval(letter3),2]]))
+        print output
+        if output > .5:
+            print "english"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+        if output< .5:
+            print "spanish"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+#thinks about words assuming they are 4 letters long
+def four_letter():
+    if __name__ == "__main__":
+        random.seed(1)
+        layer1 = NeuronLayer(4, 3)
+        layer2 = NeuronLayer(1, 4)
+        neural_network = NeuralNetwork(layer1, layer2)
+        global training_set_inputs
+        training_set_inputs = array([[h,o,l,a], [o,l,l,a], [l,o,c,k], [b,a,l,l], [u,s,o,s], [i,d,e,a], [l,o,v,e], [t,e,s,t], [a,n,o,s], [u,s,a,s], [d,r,o,p], [f,o,u,r], [e,l,l,a], [a,l,t,o],\
+                                     [p,o,o,p], [f,i,v,e], [a,l,t,a], [e,s,t,a], [f,u,c,k], [e,v,e,n], [s,e,i,s], [o,c,h,o], [h,e,l,l], [t,h,e,n], [d,i,e,z], [d,i,g,o], [s,h,i,t], [t,h,a,n],\
+                                     [c,u,n,t], [r,i,c,e], [d,o,w,n], [h,e,l,p], [d,o,o,r], [c,i,e,n], [e,a,s,y], [l,o,n,g], [w,o,r,d]])
+        training_set_outputs = array([[0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,1,1,1,0,1,1,1]]).T
+        count = 0
+        new_training_set_inputs = []
+        while count in range(len(training_set_inputs)):
+            counting = 0
+            while counting in range(4):
+                new_training_set_inputs.append(lettervars[training_set_inputs[count, counting], counting])
+                counting += 1
+            count += 1
+        array_size = len(training_set_inputs)
+        resize_training_set_inputs = np.asarray(new_training_set_inputs)
+        use_training_set_inputs = resize_training_set_inputs.reshape(array_size,4)
+        neural_network.train(use_training_set_inputs, training_set_outputs, 10000)
+        letter1 = word[0]
+        letter2 = word[1]
+        letter3 = word[2]
+        letter4 = word[3]
+        hidden_state, output = neural_network.think(array([lettervars[eval(letter1),0],lettervars[eval(letter2),1],lettervars[eval(letter3),2],lettervars[eval(letter4), 3]]))
+        print output
+        if output > .5:
+            print "english"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+        if output< .5:
+            print "spanish"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+#thinks about words assuming they are 5 letters long
+def five_letter():
+    if __name__ == "__main__":
+        random.seed(1)
+        layer1 = NeuronLayer(5, 3)
+        layer2 = NeuronLayer(1, 4)
+        neural_network = NeuralNetwork(layer1, layer2)
+        global training_set_inputs
+        training_set_inputs = array([[s,i,e,t,e], [c,i,n,c,o], [h,e,l,l,o], [l,o,c,a,l], [c,a,r,r,o], [q,u,e,s,o], [w,h,i,c,h], [v,a,l,u,e], [l,l,a,m,o], [e,s,t,o,y], [t,e,s,t,s], [e,s,t,a,s],\
+                                     [e,s,t,a,r], [p,h,o,n,e], [c,o,c,h,e], [t,o,w,e,l], [p,i,z,z,a], [c,o,u,n,t], [m,e,n,o,s], [l,u,n,e,s], [f,r,u,t,a], [f,r,u,i,t], [j,u,i,c,e], [j,u,e,g,o],\
+                                     [l,i,b,r,o], [b,e,b,e,r], [c,o,m,e,r], [c,h,i,c,a], [c,h,i,c,o], [w,o,m,a,n], [f,u,n,n,y], [n,i,g,h,t], [g,r,a,d,e], [s,h,e,l,l], [m,o,t,o,r]])
+        training_set_outputs = array([[0,0,1,1,0,0,1,1,0,0,1,0,0,1,0,1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1]]).T
+        count = 0
+        new_training_set_inputs = []
+        while count in range(len(training_set_inputs)):
+            counting = 0
+            while counting in range(5):
+                new_training_set_inputs.append(lettervars[training_set_inputs[count, counting], counting])
+                counting += 1
+            count += 1
+        array_size = len(training_set_inputs)
+        resize_training_set_inputs = np.asarray(new_training_set_inputs)
+        use_training_set_inputs = resize_training_set_inputs.reshape(array_size,5)
+        neural_network.train(use_training_set_inputs, training_set_outputs, 10000)
+        letter1 = word[0]
+        letter2 = word[1]
+        letter3 = word[2]
+        letter4 = word[3]
+        letter5 = word[4]
+        hidden_state, output = neural_network.think(array([lettervars[eval(letter1),0],lettervars[eval(letter2),1],lettervars[eval(letter3),2],lettervars[eval(letter4), 3], lettervars[eval(letter5), 4]]))
+        print output
+        if output > .5:
+            print "english"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+        if output< .5:
+            print "spanish"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+#thinks about words assuming they are 6 letters long
+def six_letter():
+    if __name__ == "__main__":
+        random.seed(1)
+        layer1 = NeuronLayer(6, 3)
+        layer2 = NeuronLayer(1, 4)
+        neural_network = NeuralNetwork(layer1, layer2)
+        global training_set_inputs
+        training_set_inputs = array([[s,e,g,u,i,r], [f,o,l,l,o,w], [c,a,n,v,a,s], [p,o,r,q,u,e], [s,t,e,n,c,h], [d,r,a,w,e,r], [q,u,e,r,e,r], [g,u,s,t,a,r], [c,r,u,n,c,h], [f,r,o,n,d,s],\
+                                     [c,u,a,n,d,o], [g,r,a,n,d,e], [c,l,e,a,v,e], [l,o,a,t,h,e], [p,e,n,s,a,r], [l,l,e,v,a,r], [t,r,i,s,t,e], [s,c,y,t,h,e], [h,e,m,l,e,t], [d,e,b,r,i,s],\
+                                     [h,o,m,b,r,e], [a,b,r,a,z,o], [a,b,r,i,g,o], [f,a,c,a,d,e], [r,e,a,l,t,y], [w,i,z,a,r,d], [a,c,a,b,a,r], [a,c,e,r,c,a], [a,c,t,u,a,l], [a,d,u,a,n,o],\
+                                     [s,h,o,v,e,l], [n,e,u,r,a,l], [w,o,m,b,a,t], [s,i,m,m,e,r], [a,b,o,a,r,d], [p,y,t,h,o,n], [p,e,n,c,i,l], [w,i,n,d,o,w], [g,l,o,b,a,l], [a,p,p,e,n,d],\
+                                     [t,u,r,n,e,d], [t,i,e,m,p,o], [v,e,n,d,e,r], [t,r,a,t,a,r], [e,s,p,o,s,o], [e,s,p,o,s,a], [s,n,e,e,z,e], [e,x,a,m,e,n], [f,a,m,o,s,o], [f,u,t,u,r,o],\
+                                     [m,a,n,d,a,r]])
+        training_set_outputs = array([[0,1,1,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0]]).T
+        count = 0
+        new_training_set_inputs = []
+        while count in range(len(training_set_inputs)):
+            counting = 0
+            while counting in range(6):
+                new_training_set_inputs.append(lettervars[training_set_inputs[count, counting], counting])
+                counting += 1
+            count += 1
+        array_size = len(training_set_inputs)
+        resize_training_set_inputs = np.asarray(new_training_set_inputs)
+        use_training_set_inputs = resize_training_set_inputs.reshape(array_size,6)
+        neural_network.train(use_training_set_inputs, training_set_outputs, 10000)
+        letter1 = word[0]
+        letter2 = word[1]
+        letter3 = word[2]
+        letter4 = word[3]
+        letter5 = word[4]
+        letter6 = word[5]
+        hidden_state, output = neural_network.think(array([lettervars[eval(letter1),0],lettervars[eval(letter2),1],lettervars[eval(letter3),2],lettervars[eval(letter4), 3], lettervars[eval(letter5), 4], lettervars[eval(letter6), 5]]))
+        print output
+        if output > .5:
+            print "english"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+        if output< .5:
+            print "spanish"
+            again = raw_input("Would you like to go again? ")
+            if again == "yes":
+                start()
+
+def start():
+    global word
+    word = raw_input("Give me a word: ")
+    if len(word) == 1:
+        print "Thinking..."
+        one_letter()
+    elif len(word) == 2:
+        print "Thinking..."
+        two_letter()
+    elif len(word) == 3:
+        print "Thinking..."
+        three_letter()
+    elif len(word) == 4:
+        print "Thinking..."
+        four_letter()
+    elif len(word) == 5:
+        print "Thinking..."
+        five_letter()
+    elif len(word) == 6:
+        print "Thinking..."
+        six_letter()
+
+start()
